@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  height: 3rem;
+  background-color: cadetblue;
+}
+
+header a {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  text-decoration: none;
+  text-transform: capitalize;
+  color: black;
+}
+
+.active {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+nav {
+  padding: 1rem;
+}
+
+table {
+  width: 80%;
+  margin: 2rem auto;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: burlywood;
+  border: 1px solid black;
+  text-align: left;
+  padding: .2rem;
+}
+
+td {
+  border: 1px solid black;
+  padding: .2rem;
+}
+
+tr {
+  line-height: 1.5rem;
+}
