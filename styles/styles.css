@@ -46,3 +46,26 @@ td {
 tr {
   line-height: 1.5rem;
 }
+
+td button {
+  margin-right: .3rem;
+  padding: .1rem;
+}
+
+.updateDiv {
+  border: 1px solid gray;
+  padding: 1rem;
+  width: 30%;
+  margin: auto;
+}
+
+.updateDiv form {
+  display: flex;
+  flex-direction: column;
+}
+
+.updateDiv form h3,
+.updateDiv form input,
+.updateDiv form select {
+  margin-bottom: .5rem;
+}
