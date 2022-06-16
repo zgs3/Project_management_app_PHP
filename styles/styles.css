@@ -26,7 +26,7 @@ nav {
 }
 
 table {
-  width: 80%;
+  width: 90%;
   margin: 2rem auto;
   border-collapse: collapse;
 }
@@ -52,18 +52,31 @@ td button {
   padding: .1rem;
 }
 
-.updateDiv {
-  border: 1px solid gray;
-  padding: 1rem;
-  width: 30%;
-  margin: auto;
+.container {
+  display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 1rem;
+ justify-items: center;
 }
 
+.creationDiv,
+.updateDiv {
+  display: inline-block;
+  padding: 1rem;
+  width: 70%;
+  min-width: 22rem;
+  border: 1px solid gray;
+}
+
+.creationDiv form,
 .updateDiv form {
   display: flex;
   flex-direction: column;
 }
 
+.creationDiv form h3,
+.creationDiv form input,
+.creationDiv form select,
 .updateDiv form h3,
 .updateDiv form input,
 .updateDiv form select {
