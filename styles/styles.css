@@ -26,8 +26,7 @@ nav {
 }
 
 table {
-  width: 90%;
-  margin: 2rem auto;
+  width: 100%;
   border-collapse: collapse;
 }
 
@@ -52,11 +51,21 @@ td button {
   padding: .1rem;
 }
 
+.tableDiv {
+  width: 90%;
+  margin: 2rem auto;
+}
+
+.addItemBtn {
+  margin-top: .4rem;
+  padding: .2rem;
+}
+
 .container {
   display: grid;
- grid-template-columns: 1fr 1fr;
- gap: 1rem;
- justify-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  justify-items: center;
 }
 
 .creationDiv,
@@ -81,4 +90,12 @@ td button {
 .updateDiv form input,
 .updateDiv form select {
   margin-bottom: .5rem;
+}
+
+h4 {
+  background-color: rgba(245, 55, 93, 0.6);
+  text-align: center;
+  margin: .4rem auto 0;
+  line-height: 1.5rem;
+  width: 60%;
 }

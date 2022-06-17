@@ -9,6 +9,9 @@ if (!$conn) {
   die('Connection failed: ' . mysqli_connect_error());
 }
 
+$errMsg = '';
+$updateErr = '';
+
 // EMPLOYEE DELETE LOGIC
 if (isset($_GET['action']) && $_GET['action'] == 'delete') {
   $sql = 'DELETE FROM Employees 
@@ -56,11 +59,15 @@ if (isset($_POST['editProject'])) {
           WHERE id = ?';
   $stmt = $conn->prepare($sql);
   $stmt->bind_param('si', $_POST['updatedProjectName'], $_POST['updateProjectID']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
+  try {
+    $res = $stmt->execute();
+    $stmt->close();
+    mysqli_close($conn);
+    header("Location: " . "?page=" . $_GET['page']);
+    exit();
+  } catch (Exception $ex) {
+    header("Location: " . "?page=" . $_GET['page'] . "&updateErr");
+  }
 }
 
 // CREATE NEW EMPLOYEE LOGIC
@@ -86,11 +93,23 @@ if (isset($_POST['createProject'])) {
 					(?)';
   $stmt = $conn->prepare($sql);
   $stmt->bind_param('s', $_POST['newProjectName']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
+  try {
+    $res = $stmt->execute();
+    $stmt->close();
+    mysqli_close($conn);
+    header("Location: " . "?page=" . $_GET['page']);
+    exit();
+  } catch (Exception $ex) {
+    header("Location: " . "?page=" . $_GET['page'] . "&action=addProject&errMsg");
+  }
+}
+
+if (isset($_GET['errMsg'])) {
+  $errMsg = 'Project name already exist. Please choose another name.';
+}
+
+if (isset($_GET['updateErr'])) {
+  $updateErr = 'Project name already exist. Please choose another name.';
 }
 
 ?>
@@ -114,7 +133,6 @@ if (isset($_POST['createProject'])) {
     foreach ($pages as $page) {
       if (isset($_GET['page']) && $_GET['page'] == $page) {
         print '<a href="?page=' . $page . '" class="active"> ' . $page . '</a>';
-        $activePage = $page . ".php";
       } else {
         print '<a href="?page=' . $page . '"> ' . $page . '</a>';
       }
@@ -144,6 +162,7 @@ if (isset($_POST['createProject'])) {
   }
 
   if (isset($_GET['page']) && $_GET['page'] == 'Employees' && mysqli_num_rows($result) > 0) {
+    print('<div class="tableDiv">');
     print('<table>');
     print('<thead>');
     print('<tr><th>Id</th><th>Full name</th><th>Assigned project</th><th>Actions</th></tr>');
@@ -160,7 +179,10 @@ if (isset($_POST['createProject'])) {
     }
     print('</tbody>');
     print('</table>');
+    print('<a href="?page=Employees&action=addEmployee"><button class="addItemBtn">Add New Employee</button></a>');
+    print('</div>');
   } else if (isset($_GET['page']) && $_GET['page'] == 'Projects') {
+    print('<div class="tableDiv">');
     print('<table>');
     print('<thead>');
     print('<tr><th>Id</th><th>Project name</th><th>Employees working</th><th>Actions</th></tr>');
@@ -177,6 +199,9 @@ if (isset($_POST['createProject'])) {
     }
     print('</tbody>');
     print('</table>');
+    print('<a href="?page=Projects&action=addProject"><button class="addItemBtn">Add New Project</button></a>');
+    print('<h4>' . $updateErr . '</h4>');
+    print('</div>');
   } else if (mysqli_num_rows($result) == 0) {
     print('<div>Error occured while loading data. Loaded 0 results</div>');
   } else {
@@ -186,7 +211,7 @@ if (isset($_POST['createProject'])) {
   print('<div class="container">');
 
   // CREATE EMPLOYEE/PROJECT FORMS
-  if (isset($_GET['page']) && $_GET['page'] == 'Employees') {
+  if (isset($_GET['action']) && $_GET['action'] == 'addEmployee') {
     print('<div class="creationDiv" ><h3>Add new employee</h3>');
     print('<form action="" method="POST" id=newEmployeeCreation>');
     print('<label for="newEmployeeFirstName">First name: </label>');
@@ -195,8 +220,8 @@ if (isset($_POST['createProject'])) {
     print('<input type="text" name="newEmployeeLastName">');
     print('<label for="selectedProject">Assign to project: </label>');
     print('<select name="selectedProject" required >');
-    print('<option value="0" disabled selected>Choose a project</option>');
-    print('<option value="0" selected>---No Project---</option>');
+    print('<option value="0" disabled >Choose a project</option>');
+    print('<option value="0" selected>--- No Project ---</option>');
     $sql = "SELECT projects.id, projects.ProjectName 
             FROM projects
             WHERE id != 0";
@@ -209,13 +234,15 @@ if (isset($_POST['createProject'])) {
     print('<button type="submit" name="createEmployee">Add</button>');
     print('</form>');
     print('</div>');
-  } else if (isset($_GET['page']) && $_GET['page'] == 'Projects') {
-    print('<div class="creationDiv" ><h3>Add new project</h3>');
+  } else if (isset($_GET['action']) && $_GET['action'] == 'addProject') {
+    print('<div class="creationDiv">');
+    print('<h3>Add new project</h3>');
     print('<form action="" method="POST">');
-    print('<label for="newProjectName">Project Name</label>');
+    print('<label for="newProjectName">Project Name:</label>');
     print('<input type="text" name="newProjectName">');
     print('<button type="submit" name="createProject">Add</button>');
     print('</form>');
+    print('<h4>' . $errMsg . '</h4>');
     print('</div>');
   }
 
@@ -238,7 +265,8 @@ if (isset($_POST['createProject'])) {
     print('<input type="text" name="updatedLastName" value="' . $row['lastName'] . '">');
     print('<label for="selectedProject">Assign to: </label>');
     print('<select name="selectedProject">');
-    print('<option value="' . $row['projectId'] . '">' . $row['projectName'] . '</option>');
+    print('<option value="0" disabled >Choose a project</option>');
+    print('<option selected value="' . $row['projectId'] . '">' . $row['projectName'] . '</option>');
     $sqlProject = "SELECT projects.id, projects.ProjectName 
                   FROM projects 
                   WHERE id != 0 AND id !=" . $row['assignedProjectId'];
@@ -247,7 +275,7 @@ if (isset($_POST['createProject'])) {
       while ($row = mysqli_fetch_assoc($resultProject)) {
         print('<option value="' . $row['id'] . '">' . $row['ProjectName'] . '</option>');
       };
-    print('<option value="NULL">---No Project---</option></select>');
+    print('<option value="NULL">--- No Project ---</option></select>');
     print('<button type="submit" name="editEmployee" >Update</button>');
     print('</form></div>');
   }
