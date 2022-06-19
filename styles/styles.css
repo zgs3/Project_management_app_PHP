@@ -1,6 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam&family=Poppins:wght@200;300&display=swap');
+
+:root {
+  --white: #f8f9fa;
+  --gray: #e1e1e1;
+  --black: #212529;
+  --darkgray: #33373a;
+  --mediumgray: #676869;
+}
+
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Anek Malayalam', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+body {
+  background-color: var(--gray);
 }
 
 header {
@@ -8,20 +25,22 @@ header {
   justify-content: space-between;
   align-items: center;
   height: 3rem;
-  background-color: cadetblue;
+  padding: 0 4rem;
+  background-color: var(--black);
 }
 
 header a {
   margin-right: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   text-decoration: none;
   text-transform: capitalize;
-  color: black;
+  color: var(--gray);
 }
 
 .active {
+  color: var(--white);
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
 }
 
 nav {
@@ -31,13 +50,40 @@ nav {
 table {
   width: 100%;
   border-collapse: collapse;
+  background-color: var(--white);
 }
 
 th {
-  background-color: burlywood;
-  border: 1px solid black;
+  background-color: var(--darkgray);
+  color: var(--white);
+  border: 1px solid var(--black);
   text-align: left;
   padding: .2rem;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 3%;
+  text-align: center;
+}
+
+table td:nth-child(2) {
+  width: 17%;
+}
+
+table th:last-child {
+  text-align: center;
+  width: 5%;
+  min-width: 6.5rem;
+}
+
+#emplCount {
+  width: 5%;
+  text-align: center;
+}
+
+tr td:nth-child(4) {
+  text-align: center;
 }
 
 td {
@@ -49,9 +95,27 @@ tr {
   line-height: 1.5rem;
 }
 
+button {
+  border-radius: 15px;
+  border: 1px solid black;
+  background-color: var(--white);
+  cursor: pointer;
+}
+
 td button {
   margin-right: .3rem;
   padding: .1rem;
+  text-align: center;
+}
+
+td a {
+  margin: 0 .8rem;
+}
+
+td i {
+  font-size: 1.3rem;
+  color: var(--black);
+  margin-top: .3rem;
 }
 
 h4 {
@@ -60,32 +124,66 @@ h4 {
   margin: .4rem auto 0;
   line-height: 1.5rem;
   width: 60%;
+  border-radius: 5px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: var(--white);
+  height: 1.7rem;
+  padding: .2rem 0 0 5rem;
+  background-color: var(--black);
+}
+
+.logOutBtn {
+  background: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.logOutBtn i {
+  padding: 0 .35rem;
+  font-size: 1.5rem;
+  color: var(--white);
+}
+
+.logOutBtn i:hover,
+header a:hover,
+i:hover {
+  color: var(--mediumgray);
+  transition: .3s;
+}
+
+.tableDiv button:hover,
+.updateDiv button:hover,
+.creationDiv button:hover,
+#loginForm button:hover {
+  background-color: var(--mediumgray);
+  transition: .3s;
+  color: var(--white);
 }
 
 .tableDiv {
   width: 90%;
-  margin: 2rem auto;
+  margin: 2rem 5rem 0;
 }
 
 .addItemBtn {
-  margin-top: .4rem;
-  padding: .2rem;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  justify-items: center;
+  margin: .7rem 0;
+  padding: .2rem .5rem;
 }
 
 .creationDiv,
 .updateDiv {
   display: inline-block;
   padding: 1rem;
-  width: 70%;
+  margin-left: 5rem;
+  width: 30%;
   min-width: 22rem;
   border: 1px solid gray;
+  background-color: white;
 }
 
 .creationDiv form,
@@ -102,35 +200,49 @@ h4 {
 .updateDiv form select,
 #loginForm form input,
 #loginForm h2 {
-  margin-bottom: .5rem;
+  margin-bottom: .3rem;
+  padding-left: .3rem;
+}
+
+.creationDiv button,
+.updateDiv button,
+#loginForm button {
+  width: 20%;
+  margin-top: .3rem;
+}
+
+.cancelBtn {
+  float: right;
+  color: var(--black);
+}
+
+.cancelBtn i {
+  font-size: 1.5rem;
 }
 
 .welcomeDiv {
-  border: 1px solid gray;
   text-align: center;
   width: 35%;
   margin: 3rem auto;
   padding: 1rem;
+  border: 1px solid var(--black);
+  background-color: var(--white);
 }
 
 .welcomeDiv h3 {
   margin-bottom: 1rem;
 }
 
-.logOutBtn {
-  margin-right: 2rem;
-}
-
 #loginForm {
   margin: 8rem auto;
   padding: 1rem;
-  width: 30%;
+  width: 40%;
+  border: 1px solid var(--black);
+  background-color: var(--white);
   text-align: center;
-  border: 1px solid gray;
 }
 
 #loginForm form div {
-  text-align: right;
-  width: 16.3rem;
-  margin: auto;
+  width: 50%;
+  margin: 1rem auto 0;
 }

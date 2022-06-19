@@ -148,6 +148,7 @@ if (isset($_GET['updateErr'])) {
   <style>
     <?php require './styles/styles.css' ?>
   </style>
+  <script src="https://kit.fontawesome.com/8cc9ee3dc9.js" crossorigin="anonymous"></script>
 </head>
 
 <!-- Login form -->
@@ -159,10 +160,8 @@ if (isset($_GET['updateErr'])) {
                                   ? print("style = \"display: none\"")
                                   : print("style = \"display: block\"") ?>>
     <div>
-      <label for="username">Username: </label>
-      <input type="text" name="username" placeholder="username = Manager" required autofocus></br>
-      <label for="password">Password: </label>
-      <input type="password" name="password" placeholder="password = 1234" required><br>
+      <input type="text" name="username" placeholder="Username = Manager" required autofocus></br>
+      <input type="password" name="password" placeholder="Password = 1234" required>
     </div>
     <button type="submit" name="login">LOG IN</button>
     <h4><?php echo ($loginMsg); ?></h4>
@@ -175,7 +174,7 @@ if (isset($_GET['updateErr'])) {
   <header>
     <nav>
       <?php
-      $pages = array("Employees", "Projects");
+      $pages = array("Home", "Employees", "Projects");
       foreach ($pages as $page) {
         if (isset($_GET['page']) && $_GET['page'] == $page) {
           print '<a href="?page=' . $page . '" class="active"> ' . $page . '</a>';
@@ -188,7 +187,7 @@ if (isset($_GET['updateErr'])) {
     <div>
       <form action="" method="POST">
         <button type="submit" name="logOut" title="Log out" class="logOutBtn">
-          LOG OUT
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </form>
     </div>
@@ -200,19 +199,19 @@ if (isset($_GET['updateErr'])) {
     // TABLE DATA RENDERING
     if (isset($_GET['page']) && $_GET['page'] == 'Employees') {
       $sql = "SELECT employees.id, GROUP_CONCAT(CONCAT_WS(' ', employees.FirstName, employees.LastName) SEPARATOR ', ') AS 'Full name', 
-            projects.ProjectName AS 'Assigned project' 
-            FROM Employees
-            LEFT JOIN projects ON employees.assignedProjectId = projects.id
-            GROUP BY employees.id";
+              projects.ProjectName AS 'Assigned project' 
+              FROM Employees
+              LEFT JOIN projects ON employees.assignedProjectId = projects.id
+              GROUP BY employees.id";
       $result = mysqli_query($conn, $sql);
     } else if (isset($_GET['page']) && $_GET['page'] == 'Projects') {
       $sql = "SELECT projects.id, projects.ProjectName, count(employees.FirstName) AS 'count', 
-            GROUP_CONCAT(CONCAT_WS(' ', employees.FirstName, employees.LastName) SEPARATOR ', ') AS 'Full name' 
-            FROM projects
-            LEFT JOIN employees ON projects.id = employees.assignedProjectId
-            WHERE projects.id != 0
-            GROUP BY ProjectName
-            ORDER BY id";
+              GROUP_CONCAT(CONCAT_WS(' ', employees.FirstName, employees.LastName) SEPARATOR ', ') AS 'Full name' 
+              FROM projects
+              LEFT JOIN employees ON projects.id = employees.assignedProjectId
+              WHERE projects.id != 0
+              GROUP BY ProjectName
+              ORDER BY id";
       $result = mysqli_query($conn, $sql);
     }
 
@@ -220,7 +219,7 @@ if (isset($_GET['updateErr'])) {
       print('<div class="tableDiv">');
       print('<table>');
       print('<thead>');
-      print('<tr><th>Id</th><th>Full name</th><th>Assigned project</th><th>Actions</th></tr>');
+      print('<tr><th>ID.</th><th>Full name</th><th>Assigned project</th><th>Actions</th></tr>');
       print('</thead>');
       print('<tbody>');
       while ($row = mysqli_fetch_assoc($result)) {
@@ -228,34 +227,34 @@ if (isset($_GET['updateErr'])) {
           . '<td>' . $row['id'] . '</td>'
           . '<td>' . $row['Full name'] . '</td>'
           . '<td>' . $row['Assigned project'] . '</td>'
-          . '<td>' . '<a href="?page=Employees&action=delete&id=' . $row['id'] . '"><button title="Delete employee">DELETE</button></a>'
-          . '<a href="?page=Employees&action=updateEmployee&id='  . $row['id'] . '"><button title="Update employee">UPDATE</button></a></td>'
+          . '<td>' . '<a href="?page=Employees&action=delete&id=' . $row['id'] . '"><i class="fa-regular fa-trash-can" title="Delete employee"></i></a>'
+          . '<a href="?page=Employees&action=updateEmployee&id='  . $row['id'] . '"><i class="fa-regular fa-pen-to-square" title="Update employee"></i></a></td>'
           . '</tr>');
       }
       print('</tbody>');
       print('</table>');
-      print('<a href="?page=Employees&action=addEmployee"><button class="addItemBtn" title="Add new employee">Add New Employee</button></a>');
+      print('<a href="?page=Employees&action=addEmployee"><button class="addItemBtn" title="Add new employee"><i class="fa-solid fa-plus"></i> New Employee</button></a>');
       print('</div>');
     } else if (isset($_GET['page']) && $_GET['page'] == 'Projects') {
       print('<div class="tableDiv">');
       print('<table>');
       print('<thead>');
-      print('<tr><th>Id</th><th>Project name</th><th>Num. of employees working<th>Assigned employees</th><th>Actions</th></tr>');
+      print('<tr><th>ID.</th><th>Project name</th><th>Assigned employees</th><th id="emplCount">Empl. count</th><th>Actions</th></tr>');
       print('</thead>');
       print('<tbody>');
       while ($row = mysqli_fetch_assoc($result)) {
         print('<tr>'
           . '<td>' . $row["id"] . '</td>'
           . '<td>' . $row["ProjectName"] . '</td>'
-          . '<td>' . $row["count"] . '</td>'
           . '<td>' . $row["Full name"] . '</td>'
-          . '<td><a href="?page=Projects&action=deleteProject&id='  . $row['id'] . '"><button title="Delete project">DELETE</button><a>'
-          . '<a href="?page=Projects&action=updateProject&id='  . $row['id'] . '"><button title="Update project">UPDATE</button></a></td>'
+          . '<td>' . $row["count"] . '</td>'
+          . '<td><a href="?page=Projects&action=deleteProject&id='  . $row['id'] . '"><i class="fa-regular fa-trash-can" title="Delete project"></i></a>'
+          . '<a href="?page=Projects&action=updateProject&id='  . $row['id'] . '"><i class="fa-regular fa-pen-to-square" title="Update project"></i></a></td>'
           . '</tr>');
       }
       print('</tbody>');
       print('</table>');
-      print('<a href="?page=Projects&action=addProject"><button class="addItemBtn" title="Add new project">Add New Project</button></a>');
+      print('<a href="?page=Projects&action=addProject"><button class="addItemBtn" title="Add new project"><i class="fa-solid fa-plus"></i> New Project</button></a>');
       print('<h4>' . $updateErr . '</h4>');
       print('</div>');
     } else {
@@ -266,11 +265,13 @@ if (isset($_GET['updateErr'])) {
       print('</div>');
     }
 
-    print('<div class="container">');
-
     // CREATE EMPLOYEE/PROJECT FORMS
     if (isset($_GET['action']) && $_GET['action'] == 'addEmployee') {
-      print('<div class="creationDiv" ><h3>Add new employee</h3>');
+      print('<div class="creationDiv">');
+      print('<div>');
+      print('<a href="?page=Employees" class="cancelBtn" title="Cancel" ><i class="fa-regular fa-rectangle-xmark"></i></a>');
+      print('<h3>Add new employee</h3>');
+      print('</div>');
       print('<form action="" method="POST" id=newEmployeeCreation>');
       print('<label for="newEmployeeFirstName">First name: </label>');
       print('<input type="text" name="newEmployeeFirstName">');
@@ -281,40 +282,47 @@ if (isset($_GET['updateErr'])) {
       print('<option value="0" disabled >Choose a project</option>');
       print('<option value="0" selected>--- No Project ---</option>');
       $sql = "SELECT projects.id, projects.ProjectName 
-            FROM projects
-            WHERE id != 0";
+              FROM projects
+              WHERE id != 0";
       $result = mysqli_query($conn, $sql);
       if (mysqli_num_rows($result) > 0)
-        while ($row = mysqli_fetch_assoc($result)) {
-          print('<option value="' . $row['id'] . '">' . $row['ProjectName'] . '</option>');
-        };
+      while ($row = mysqli_fetch_assoc($result)) {
+        print('<option value="' . $row['id'] . '">' . $row['ProjectName'] . '</option>');
+      };
       print('</select>');
-      print('<button type="submit" name="createEmployee">Add</button>');
+      print('<button type="submit" name="createEmployee" title="Add new employee">Add</button>');
       print('</form>');
       print('</div>');
     } else if (isset($_GET['action']) && $_GET['action'] == 'addProject') {
       print('<div class="creationDiv">');
+      print('<div>');
+      print('<a href="?page=Projects" class="cancelBtn" title="Cancel" ><i class="fa-regular fa-rectangle-xmark"></i></a>');
       print('<h3>Add new project</h3>');
+      print('</div>');
       print('<form action="" method="POST">');
       print('<label for="newProjectName">Project Name:</label>');
       print('<input type="text" name="newProjectName">');
-      print('<button type="submit" name="createProject">Add</button>');
+      print('<button type="submit" name="createProject" title="Add new project">Add</button>');
       print('</form>');
       print('<h4>' . $errMsg . '</h4>');
       print('</div>');
     }
-
+    
     // EMPLOYEE UPDATE FORM
     if (isset($_GET['action']) && $_GET['action'] == 'updateEmployee') {
       $sql = "SELECT employees.id, employees.firstName, employees.lastName, employees.assignedProjectId, 
-						projects.id AS projectId, projects.projectName 
-						FROM employees
-						LEFT JOIN projects ON employees.assignedProjectId = projects.id
-						WHERE employees.id =" . $_GET['id'];
+						  projects.id AS projectId, projects.projectName 
+						  FROM employees
+						  LEFT JOIN projects ON employees.assignedProjectId = projects.id
+						  WHERE employees.id =" . $_GET['id'];
       $result = mysqli_query($conn, $sql);
       mysqli_num_rows($result);
       $row = mysqli_fetch_assoc($result);
-      print('<div class="updateDiv"><h3>UPDATE EMPLOYEE ID: ' . $_GET['id'] . '</h3>');
+      print('<div class="updateDiv">');
+      print('<div>');
+      print('<a href="?page=Employees" class="cancelBtn" title="Cancel" ><i class="fa-regular fa-rectangle-xmark"></i></a>');
+      print('<h3>Update employee ID: ' . $_GET['id'] . '</h3>');
+      print('</div>');
       print('<form action="" method="POST">');
       print('<input type="text" name="updateID" hidden value="' . $row['id'] . '"></input>');
       print('<label for="updatedFirstName">First name: </label>');
@@ -326,39 +334,45 @@ if (isset($_GET['updateErr'])) {
       print('<option value="0" disabled >Choose a project</option>');
       print('<option selected value="' . $row['projectId'] . '">' . $row['projectName'] . '</option>');
       $sqlProject = "SELECT projects.id, projects.ProjectName 
-                  FROM projects 
-                  WHERE id != 0 AND id !=" . $row['assignedProjectId'];
+                    FROM projects 
+                    WHERE id != 0 AND id !=" . $row['assignedProjectId'];
       $resultProject = mysqli_query($conn, $sqlProject);
       if (mysqli_num_rows($resultProject) > 0)
-        while ($row = mysqli_fetch_assoc($resultProject)) {
-          print('<option value="' . $row['id'] . '">' . $row['ProjectName'] . '</option>');
-        };
+      while ($row = mysqli_fetch_assoc($resultProject)) {
+        print('<option value="' . $row['id'] . '">' . $row['ProjectName'] . '</option>');
+      };
       print('<option value="NULL">--- No Project ---</option></select>');
       print('<button type="submit" name="editEmployee" >Update</button>');
       print('</form></div>');
     }
-
+    
     // PROJECT UPDATE FORM
     if (isset($_GET['action']) && $_GET['action'] == 'updateProject') {
       $sql = "SELECT projects.id, projects.ProjectName 
-            FROM projects
-						WHERE id =" . $_GET['id'];
+              FROM projects
+						  WHERE id =" . $_GET['id'];
       $result = mysqli_query($conn, $sql);
       mysqli_num_rows($result);
       $row = mysqli_fetch_assoc($result);
-      print('<div class="updateDiv"><h3>UPDATE PROJECT ID: ' . $_GET['id'] . '</h3>');
+      print('<div class="updateDiv">');
+      print('<div>');
+      print('<a href="?page=Projects" class="cancelBtn" title="Cancel" ><i class="fa-regular fa-rectangle-xmark"></i></a>');
+      print('<h3>UPDATE PROJECT ID: ' . $_GET['id'] . '</h3>');
+      print('</div>');
       print('<form action="" method="POST">');
       print('<input type="text" name="updateProjectID" hidden value="' . $row['id'] . '"></input>');
+      print('<label for="updatedProjectName">Project name: </label>');
       print('<input type="text" name="updatedProjectName" value="' . $row['ProjectName'] . '">');
       print('<button type="submit" name="editProject" >Update</button>');
       print('</form></div>');
     }
 
-    print('</div>');
-
     mysqli_close($conn);
     ?>
 
+    <footer>
+      <span>Some cool company name 2022.</span>
+    </footer>
 </div>
 </body>
 
