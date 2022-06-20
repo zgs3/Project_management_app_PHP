@@ -1,10 +1,12 @@
 # Project_management_app_PHP
 
-* Application which allows the user to see the list of working employees and currently active projects. Projects and employees data is fetched from MySQL database. 
+* Application which allows the user to see the list of working employees and currently active projects.
 
 Also the user is able to add new employees, projects and edit or delete them and all those changes are updated in MySQL database accordingly.
 
 * Project was done as a Sprint 7 task while I was studying at Baltic Institute of Technology. 
+
+![ss1](https://user-images.githubusercontent.com/97868964/174650599-c98d580e-4581-4fc0-bb44-6dcdc7fa707e.png)
 
 
 ## Getting Started
@@ -21,10 +23,13 @@ If you are using XAMPP and MySQL Workbench:
 
 Note that in this project default connection username "root" and no password is used. If you intend to use other connection credentials, you must change the username and password in "sql_connection.php" file accordingly.
 
+![myslq1](https://user-images.githubusercontent.com/97868964/174650299-175d5750-3320-4959-884b-852b3b081c61.png)
 
 2. 1. Click "Server".
 
 2. 2. Click "Data Import".
+
+![myslq2](https://user-images.githubusercontent.com/97868964/174650486-1d827643-ce70-42a9-ae1b-0dfde3400082.png)
 
 2. 3. Choose "Import from Self-Contained File."
 
