@@ -1,140 +1,11 @@
 <?php
 
-session_start();
-// logout 
-if (isset($_POST['logOut'])) {
-  session_destroy();
-  session_start();
-  header('Location: ' . rtrim($_SERVER['PHP_SELF'], 'index.php'));
-  exit;
-}
-
-// login 
-$loginMsg = '';
-if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password'])) {
-  if ($_POST['username'] == 'Manager' && $_POST['password'] == '1234') {
-    $_SESSION['logged_in'] = true;
-    $_SESSION['timeout'] = time();
-    $_SESSION['username'] = $_POST['username'];
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
-  } else {
-    $loginMsg = 'Wrong Username or Password.';
-  }
-}
-
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'projects_db';
-
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-if (!$conn) {
-  die('Connection failed: ' . mysqli_connect_error());
-}
-
-$errMsg = '';
-$updateErr = '';
-
-// EMPLOYEE DELETE LOGIC
-if (isset($_GET['action']) && $_GET['action'] == 'delete') {
-  $sql = 'DELETE FROM Employees 
-          WHERE id = ?';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('i', $_GET['id']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
-}
-
-// PROJECT DELETE LOGIC
-if (isset($_GET['action']) && $_GET['action'] == 'deleteProject') {
-  $sql = 'DELETE FROM projects 
-          WHERE id = ?';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('i', $_GET['id']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
-}
-
-// UPDATE EMPLOYEE LOGIC
-if (isset($_POST['editEmployee'])) {
-  $sql = 'UPDATE employees 
-          SET firstName = ?, lastName = ?, assignedProjectId = ? 
-          WHERE id = ?';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('ssii', $_POST['updatedFirstName'], $_POST['updatedLastName'], $_POST['selectedProject'], $_POST['updateID']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
-}
-
-// UPDATE PROJECT LOGIC
-if (isset($_POST['editProject'])) {
-  $sql = 'UPDATE projects 
-          SET projectName = ? 
-          WHERE id = ?';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('si', $_POST['updatedProjectName'], $_POST['updateProjectID']);
-  try {
-    $res = $stmt->execute();
-    $stmt->close();
-    mysqli_close($conn);
-    header("Location: " . "?page=" . $_GET['page']);
-    exit();
-  } catch (Exception $ex) {
-    header("Location: " . "?page=" . $_GET['page'] . "&updateErr");
-  }
-}
-
-// CREATE NEW EMPLOYEE LOGIC
-if (isset($_POST['createEmployee'])) {
-  $sql = 'INSERT INTO employees 
-					(firstName, lastName, assignedProjectId)
-					VALUES 
-					(?, ?, ?)';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('ssi', $_POST['newEmployeeFirstName'], $_POST['newEmployeeLastName'], $_POST['selectedProject']);
-  $res = $stmt->execute();
-  $stmt->close();
-  mysqli_close($conn);
-  header("Location: " . "?page=" . $_GET['page']);
-  exit();
-}
-
-// CREATE NEW PROJECT LOGIC
-if (isset($_POST['createProject'])) {
-  $sql = 'INSERT INTO projects 
-					(ProjectName)
-					VALUES 
-					(?)';
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param('s', $_POST['newProjectName']);
-  try {
-    $res = $stmt->execute();
-    $stmt->close();
-    mysqli_close($conn);
-    header("Location: " . "?page=" . $_GET['page']);
-    exit();
-  } catch (Exception $ex) {
-    header("Location: " . "?page=" . $_GET['page'] . "&action=addProject&errMsg");
-  }
-}
-
-if (isset($_GET['errMsg'])) {
-  $errMsg = 'Project name already exist. Please choose another name.';
-}
-
-if (isset($_GET['updateErr'])) {
-  $updateErr = 'Project name already exist. Please choose another name.';
-}
+require_once './login_logout.php';
+require_once './sql_connection.php';
+require_once './delete_query_logic.php';
+require_once './update_query_logic.php';
+require_once './create_query_logic.php';
+require_once './error_messages.php';
 
 ?>
 <!DOCTYPE html>
@@ -144,6 +15,7 @@ if (isset($_GET['updateErr'])) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/icon.png" />
   <title>Project Management</title>
   <style>
     <?php require './styles/styles.css' ?>
