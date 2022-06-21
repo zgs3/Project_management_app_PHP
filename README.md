@@ -42,7 +42,7 @@ Note that schema name must be "projects_db", because this name is written in the
 2. 6. Click "Start Import".
 
 
-3. Start "Apache" server in "XAMMP".
+3. Start "Apache" and "MySQL" servers in "XAMMP".
 
 4. Open your prefered browser and go to localhost/Project_management_php/
 
